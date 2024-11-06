@@ -1,4 +1,4 @@
-# keen games C++ coding standards v0.3 (3.1.2019)
+# keen games C++ Coding Standards v1.0 (01.11.2021)
 
 ## Prime Directive
 * __code has to be simple, fast and self-explanatory__
@@ -9,10 +9,11 @@
 
 ### Features that are mandatory / encouraged:
 
-* C++11: static assertions -> you *can* use the KEEN_STATIC_ASSERT macro instead
-* C++11: nullptr -> use it everywhere / never use 0 for pointers
-* C++11: C++ attributes: noreturn, deprecated, nodiscard
-* C++11: constexpr values -> use for named constants (over enums/defines/const)
+* C++11: static assertions -> you *can* use the `KEEN_STATIC_ASSERT` macro instead
+* C++11: `nullptr` -> use it everywhere / never use `0` for pointers
+* C++11: C ++ attributes: `noreturn`, `deprecated`, `nodiscard`
+* C++11: `constexpr` values -> use for named constants (over enums/defines/const)
+* C++11: `constexpr` functions -> use for ctors or stuff you might want to use in constexpr initialization
 * C++11: explicit virtual overrides
 * C++11: strongly typed enums (nearly always specify the underlying type)
 * C++11: final specifier
@@ -25,37 +26,37 @@
 * C++11: variadic templates -> minimize use / only for formatString/scanString
 * C++11: template aliasing
 * C++11: decltype -> only useful in some template meta programming code (which should be minimized)
-* C++11: constexpr functions -> not enough experience yet.. should be fine when used rarely
 * C++11: delegating constructors -> sure, why not.. but minimizing the use of constructors is preferred
-* C++11: user-defined literals -> only use it for Strings (__.""\_s".__)
+* C++11: user-defined literals -> only for library types
 * C++11: default functions -> sure, why not.. but avoid 'default' functions whenever possible
 * C++11: deleted functions
 * C++11: range based for loops -> *can* be used but often a normal / raw loop is easier
-* C++11: explicit conversion functions (*if* you need to write a conversion operator it probably should be explicit)
+* C++11: explicit conversion functions (if you need to write a conversion operator it probably should be explicit)
 * C++11: type_traits
+* C++11: move semantics (only use if you need the struct in a growing container - and you need the mtor licence!)
+* C++11: lambda expressions (don't exaggerate)
 * C++17: inline variables (prefer constexpr)
 * C++17: nested namespaces
 * C++17: constexpr if (better than alternatives, but try to minimize meta-programming)
 
 ### Forbidden/Banned Features:
 
+* C++98: c arrays, use `StaticArray< T, S >` instead
 * C++98: exceptions
 * C++98: rtti
 * C++11: global new/delete malloc/free
-* C++11: the STL (except for type_traits/stdint/and other 'compiler' header files
+* C++11: the STL (except for type_traits/stdint/and other 'compiler' header files)
 * C++11: the CRT
-* C++11: move semantics
 * C++11: rvalue references
 * C++11: forwarding references
 * C++11: initializer lists
 * C++11: auto
-* C++11: lambda expressions
 * C++11: std::thread
 * C++11: smart pointers (unique_ptr/shared_ptr/weak_ptr)
 * C++11: std::chrono
 * C++11: std::async
 * C++14: generic lambda expressions
-* C++14: lamda capture initializers* C++17:
+* C++14: lambda capture initializers
 * C++14: return type deduction
 * C++14: decltype(auto)
 * C++14: variable templates
@@ -73,7 +74,9 @@
 
 ### Dynamic memory allocation
 
-* All memory allocations have to use the MemoryAllocator interface (Either directly or with functions like __newObject__)
+* all memory allocations have to use the MemoryAllocator interface (Either directly or with functions like `newObject`)
+* try to use pools instead of new/delete
+* think about upper memory limits
 
 ### Inheritance
 
@@ -90,52 +93,53 @@
 * __.hpp__, __.cpp__, __.inl__ for C++ source files
 * __.cxx__, __.hxx__ for C++ Source files using MS UWP Extensions
 * __.ds__, __.crc__, __.shader__, __.hlsl__, __.lace__ for various other sources
-* lower case with "__\___" between words (eg: __base\_memory\_allocator.hpp__)
+* lower case with `_` between words (eg: `base_memory_allocator.hpp`)
 
 ### Namespaces
 
-* lowercase, with "__\___"
-* namespace __keen__ scopes everything
-* don't use __using__-directives outside of classes, functions or other namespaces
+* lowercase, with `_`
+* namespace `keen` scopes everything
+* don't use `using`-directives outside of classes, functions or other namespaces
 
 ### Variable Names
 
-* only __a__, __b__, __c__, __i__, __j__, __k__, __u__, __v__, __w__, __x__, __y__, __z__ are allowed as one-char variables
-* lowercase (eg: __lightDirection__)
-* pointer variables start with __p__, pointerpointer with __pp__ (eg: __pValue__, __ppData__)
-* class member variables start with __m___ (eg: __m\_pData__)
-* struct member variables have no prefix (eg: __size__)
-* static variables start with __s___ (eg: __s\_pTempFolder__)
-* global variables (try to avoid!) start with __g___ (eg: __g\_badIdea__)
+* only `a`, `b`, `c`, `i`, `j`, `k`, `u`, `v`, `w`, `x`, `y`, `z` are allowed as one-char variables
+* lowercase (eg: `lightDirection`)
+* pointer variables start with `p`, pointerpointer with `pp` (eg: `pValue`, `ppData`)
+* class member variables start with `m_` (eg: `m_pData`)
+* struct member variables have no prefix (eg: `size`)
+* static variables start with `s_` (eg: `s_pTempFolder`)
+* global variables (try to avoid!) start with `g_` (eg: `g_badIdea`)
 * don't use one-char variables in bigger for-loops
-* self-explaining names (__position__ instead of __pos__, __direction__ instead of __dir__)
-* pointer arrays have no __p__ prefix (eg: "__char* names[] = {...}__")
+* self-explaining names (`position` instead of `pos`, `direction` instead of `dir`)
+* pointer arrays have no `p` prefix
 
 ### Constants names
 
-* Don't use enums for magic numbers
-* Use constexpr: __constexpr size\_t MaxPlayers = 4u;__
+* Don't use enums/macros for magic numbers
+* Use constexpr: `constexpr size_t MaxPlayers = 4u;`
 * Uppercase first character
 
 ### Function Names
 
-* case: __createYRotation__, __createGlesBuffer__, __createAabb__
+* case: `createYRotation`, `createGlesBuffer`, `createAabb`
 * always start with a verb
-* __get...__ only for simple getter with few logic (otherwise use __find/calculate/...__)
+* `get...` only for simple getter with few logic (otherwise use `find/calculate/...`)
 
 ### Function Parameter
 
 * output parameter always as pointer (no nonconst references allowed)
 * output parameters first
-* call by value for all parameter with __sizeof() <= 16u__
+* call by value for all parameter with `sizeof() <= 16u` (use reference for const structs with cctor)
 * only one bool parameter allowed, use flags or parameter struct instead
-* flags parameter is always __uint32__
+* use `Bitmask` for flags
 * assert all pointer parameter if required
+* if you want to have your call by value parameter `const`, declare it `const` only in the function implementation
 
 ### Function Return Values
 
-* use __bool__ only for simple results, __ErrorId__ otherwise
-* use __Result<T\>__ for small types
+* use `bool` only for simple results, `Result< void >` otherwise
+* use `Result< T >` for small types
 * no nonconst references allowed
 
 ### Classes
@@ -147,41 +151,54 @@
 
 ### .hpp/.inl
 
-* use file name defines instead of __pragma once__ in __.hpp/.inl__:
-  `#ifndef KEEN_FILE_NAME_EXT #define KEEN_FILE_NAME_EXT ... #endif`
+* use file name defines instead of `pragma once` in __.hpp/.inl__:
+
+		#ifndef KEEN_VOXEL_DATA_HPP
+		#define KEEN_VOXEL_DATA_HPP 
+		... 
+		#endif
+
 * headers should be self contained (the header has to include all required headers itself)
 * use forward declaration instead of includes in header files if possible
 * implement inline and template functions in __.inl__ file
 * create __.inl__ file beside __.cpp__, include with relative path from __.hpp__
-* Don't implement one-line functions in declaration
+* Don't implement functions in declaration to keep it small and simple!
 
 ### .cpp
 
 * include own header file first
 * sort include files by name
-* declare local functions __static__ and forward
-* don't implement functions in "__namespace xyz { }__" scope
-* always put __static__ variables in namespace
+* declare local functions `static` and forward
+* don't implement functions in `namespace xyz { }` scope
+* always put `static` variables in namespace
+* no-const references are only allowed in *small* scopes (around 16 lines)
 
 ### Code
 
-* use tabs, tab-size == 4__
-* no "__a = b = c__" assignments
-* no "__int a, b, c__" declaration
-* no "if__( var == true)__" or "__if( false == var )__"
-* use __KEEN\_ON/OFF__ and __KEEN\_USING__ for feature define declarations
-* __size\_t__ has different sizes, be aware of that!
-* use "__( )__" braces in expressions, they don't hurt
-* use __nullptr__ instead of __0__ for pointer
+* use tabs, `tab-size == 4`
+* no `a = b = c` assignments
+* no `int a, b, c` declaration
+* no `if( var == true)` or `if( false == var )`
+* use `KEEN_ON/KEEN_OFF` and `KEEN_USING` for feature define declarations
+* use `( )` braces in expressions, they don't hurt
+* use `nullptr` instead of `0` for pointer
 * don't declare big variables on the stack
 * compiletime-assert all enum related arrays
-* don't forget _default: case_ in switches
+* don't use `default:` case in switches with enum value (so the compiler can tell you missing cases)
+* use `default:` case in switches otherwise
 * use empty lines to let your code breath
-* use __u__ postfix for unsigned literals (eg: __26u__)
-* declare everything possible __const__ or __constexpr__
+* use `u` postfix for unsigned literals (eg: `26u`)
+* declare everything possible `const` or `constexpr`
 * use the name 'Parameters' instead of 'Parameter' for parameter structs
+* don't use `static` local variables in functions
 
 ### Systems
 
-* use __createXYZ__, __destroyXYZ__, __updateXYZ__ function names
+* use `createXYZ`, `destroyXYZ`, `updateXYZ` function names
 * use a parameter struct for creation if more than 2 parameters
+* all destroy functions have to be asynchronous (call `destroyXYZ` until it returns `true`)
+
+### Unit Tests
+
+* create unit tests for all base functionality (it's a long way)
+* try to catch the corner cases and do some pseudo random tests
