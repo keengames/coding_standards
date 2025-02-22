@@ -19,7 +19,10 @@
 * C++11: final specifier
 * C++11: inline namespaces -> sure, why not.. maybe try it for versioning?
 * C++11: non static data member initializers -> prefer a struct with member initializers over a class with constructor for 'public'/'parameter' structs
+* C++11: range based foor loops (only for const refs/values)
 * C++14: binary literals
+* C++20: `consteval`
+* C++20: designated initializers (for huge parameter structs)
 
 ### 'Meh' Features which should be only used when they are really worth it in the situation
 
@@ -38,6 +41,7 @@
 * C++17: inline variables (prefer constexpr)
 * C++17: nested namespaces
 * C++17: constexpr if (better than alternatives, but try to minimize meta-programming)
+* C++20: `[[likely]] [[unlikely]]` with `KEEN_LIKELY KEEN_UNLIKELY`
 
 ### Forbidden/Banned Features:
 
@@ -92,7 +96,7 @@
 
 * __.hpp__, __.cpp__, __.inl__ for C++ source files
 * __.cxx__, __.hxx__ for C++ Source files using MS UWP Extensions
-* __.ds__, __.crc__, __.shader__, __.hlsl__, __.lace__ for various other sources
+* __.ds__, __.shader__, __.hlsl__, __.lace__ for various other sources
 * lower case with `_` between words (eg: `base_memory_allocator.hpp`)
 
 ### Namespaces
@@ -117,7 +121,7 @@
 ### Constants names
 
 * Don't use enums/macros for magic numbers
-* Use constexpr: `constexpr size_t MaxPlayers = 4u;`
+* Use constexpr: `constexpr uint32 MaxPlayers = 4u;`
 * Uppercase first character
 
 ### Function Names
@@ -171,13 +175,14 @@
 * declare local functions `static` and forward
 * don't implement functions in `namespace xyz { }` scope
 * always put `static` variables in namespace
-* no-const references are only allowed in *small* scopes (around 16 lines)
+* no-const references not allowed
 
 ### Code
 
 * use tabs, `tab-size == 4`
 * no `a = b = c` assignments
 * no `int a, b, c` declaration
+* Try to avoid `size_t`, `int`, `uint` types (use `uint32` for `size_t` when you know 4gib is enough)
 * no `if( var == true)` or `if( false == var )`
 * use `KEEN_ON/KEEN_OFF` and `KEEN_USING` for feature define declarations
 * use `( )` braces in expressions, they don't hurt
