@@ -1,4 +1,4 @@
-# keen games C++ Coding Standards v1.0 (01.11.2021)
+# keen games C++ Coding Standards v1.1 (09.05.2025)
 
 ## Prime Directive
 * __code has to be simple, fast and self-explanatory__
@@ -21,6 +21,7 @@
 * C++11: non static data member initializers -> prefer a struct with member initializers over a class with constructor for 'public'/'parameter' structs
 * C++11: range based foor loops (only for const refs/values)
 * C++14: binary literals
+* C++17: if with init-statement -> helpful when parsing messages `if( MyMsg* pMyMsg = castMyMessage( pMsg ); pMyMsg != nullptr )`
 * C++20: `consteval`
 * C++20: designated initializers (for huge parameter structs)
 
@@ -42,6 +43,7 @@
 * C++17: nested namespaces
 * C++17: constexpr if (better than alternatives, but try to minimize meta-programming)
 * C++20: `[[likely]] [[unlikely]]` with `KEEN_LIKELY KEEN_UNLIKELY`
+* C++79: Function Macros -> prefer template functions
 
 ### Forbidden/Banned Features:
 
@@ -90,6 +92,38 @@
 
 * Try to minimize use of callbacks and/or virtual functions because it makes the call-site a lot more complex -> As a callback can do practically anything it's really hard to parallelize callbacks and/or make assumptions about data flow
 
+### Classes
+
+* try to avoid, use private structs instead
+* use explicit constructors
+* use virtual destructors when using it polymorph
+* align function names and member variable names
+
+### Structs
+
+* avoid lots of members, try to group them in other structs
+
+### Access
+
+* don't access an array element twice, create a local reference instead
+* don't create access wall of texts, eg. access multiple struct members in deep structs (`a.b.c.x = 3u; a.b.c.y = 4u;`), create a local reference instead
+
+### Function Parameter
+
+* output parameter always as pointer (no nonconst references allowed)
+* output parameters first
+* call by value for all parameter with `sizeof() <= 16u` (use reference for const structs with cctor)
+* only one bool parameter allowed, use flags or parameter struct instead
+* use `Bitmask` for flags
+* assert pointer parameters if you don't access them immediately 
+* if you want to have your call by value parameter `const`, declare it `const` only in the function implementation
+
+### Function Return Values
+
+* use `bool` only for simple results, `Result< void >` otherwise
+* use `Result< T >` for small types
+* no nonconst references allowed
+
 ## Formatting
 
 ### File Names
@@ -130,29 +164,6 @@
 * always start with a verb
 * `get...` only for simple getter with few logic (otherwise use `find/calculate/...`)
 
-### Function Parameter
-
-* output parameter always as pointer (no nonconst references allowed)
-* output parameters first
-* call by value for all parameter with `sizeof() <= 16u` (use reference for const structs with cctor)
-* only one bool parameter allowed, use flags or parameter struct instead
-* use `Bitmask` for flags
-* assert all pointer parameter if required
-* if you want to have your call by value parameter `const`, declare it `const` only in the function implementation
-
-### Function Return Values
-
-* use `bool` only for simple results, `Result< void >` otherwise
-* use `Result< T >` for small types
-* no nonconst references allowed
-
-### Classes
-
-* try to avoid, use private structs instead
-* use explicit constructors
-* use virtual destructors when using it polymorph
-* align function names and member variable names
-
 ### .hpp/.inl
 
 * use file name defines instead of `pragma once` in __.hpp/.inl__:
@@ -188,6 +199,7 @@
 * use `( )` braces in expressions, they don't hurt
 * use `nullptr` instead of `0` for pointer
 * don't declare big variables on the stack
+* try to use `uint32` instead of `size_t`
 * compiletime-assert all enum related arrays
 * don't use `default:` case in switches with enum value (so the compiler can tell you missing cases)
 * use `default:` case in switches otherwise
@@ -195,6 +207,7 @@
 * use `u` postfix for unsigned literals (eg: `26u`)
 * declare everything possible `const` or `constexpr`
 * use the name 'Parameters' instead of 'Parameter' for parameter structs
+* default-initialize all values in a 'Parameters' struct
 * don't use `static` local variables in functions
 
 ### Systems
